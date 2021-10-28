@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: zuul-gateway
+  security:
+    user:
+      name: admin
+      password: admin
+server:
+  port: 8762
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: https://erp-eureka.herokuapp.com/eureka
+    register-with-eureka: false
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    healthcheck:
+      enabled: true
+zuul:
+  prefix: /api
+#  ignored-services: "*"
+  host:
+    connect-timeout-millis: 60000
+    max-per-route-connections: 10000
+    max-total-connections: 5000
+    socket-timeout-millis: 60000
+  semaphore:
+    max-semaphores: 500
+  strip-prefix: true
+  ribbon:
+    eager-load:
+      enabled: true
+  # TODO : REMOVE ONCE YOU FIGURE OUT CLIENT SIDE LOAD BALANCING
+  sensitive-headers:
+ribbon:
+  eureka:
+    enabled: true
+  ConnectTimeout: 10000
+  ReadTimeout: 60000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+        thread:
+          timeoutInMilliseconds: 40000
+
+# TODO : Delete the following if you figure out how to load balance automatically by client side eureka discovery
+customer-microservice:
+  ribbon:
+    NIWSServerListClassName: com.netflix.loadbalancer.ConfigurationBasedServerList
+    listOfServers: https://customer-microservices.herokuapp.com/
+    ConnectTimeout: 1000
+    ReadTimeout: 3000
+    MaxTotalHttpConnections: 500
+    MaxConnectionsPerHost: 100
+produit-microservice:
+  ribbon:
+    NIWSServerListClassName: com.netflix.loadbalancer.ConfigurationBasedServerList
+    listOfServers: https://produit-microservice.herokuapp.com/
+    ConnectTimeout: 1000
+    ReadTimeout: 3000
+    MaxTotalHttpConnections: 500
+    MaxConnectionsPerHost: 100
+appointment-microservice:
+  ribbon:
+    NIWSServerListClassName: com.netflix.loadbalancer.ConfigurationBasedServerList
+    listOfServers: https://appointments-microservice.herokuapp.com/
+    ConnectTimeout: 1000
+    ReadTimeout: 3000
+    MaxTotalHttpConnections: 500
+    MaxConnectionsPerHost: 100
